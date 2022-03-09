@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const asyncHandler = require('express-async-handler');
 const User = require('../models/userModel');
 
-//REGISTER NEW USER:
+//REGISTER (CREATE) A NEW USER:
 const registerUser = asyncHandler(async (req, res) => {
   //step 1 (GET DATA FROM REQ)
   const { name, email, password } = req.body;
@@ -46,7 +46,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-//AUTH A USER:
+//AUTH & LOGIN A USER:
 const loginUser = asyncHandler(async (req, res) => {
   //step 1(RECEIVE THE DATA)
   const { email, password } = req.body;
@@ -68,9 +68,9 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-//GET USER INFO (SET TO PRIVATE)
+//GET SINGLE USER
 const getUser = asyncHandler(async (req, res) => {
-  const { _id, name, email } = await User.findById(req.user.id);
+  const { _id, name, email } = await User.findById(req.user.id); //this is coming from authMiddleware:req.user
 
   res.status(200).json({
     id: _id,
@@ -78,6 +78,8 @@ const getUser = asyncHandler(async (req, res) => {
     email,
   });
 });
+
+//-HELPER FUNCTIONS-///
 
 //GENERATE TOKEN:
 const generateToken = (id) => {

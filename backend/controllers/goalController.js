@@ -2,16 +2,16 @@ const asyncHandler = require('express-async-handler');
 const Goal = require('../models/goalModel');
 const User = require('../models/userModel');
 
-//GET GOALS:
+//A.GET GOALS:
 const getGoals = asyncHandler(async (req, res) => {
-  //step 1 (Identify goal = user relation)
+  //step 1 (Identify the goal = user relation)
   const goals = await Goal.find({ user: req.user.id }); //this is coming from the middleware 'protect'. // remember that "user" is now a field on the goal model.
 
   //step 2
   res.status(200).json(goals);
 });
 
-//CREATE GOALS:
+//B.CREATE GOALS:
 const setGoals = asyncHandler(async (req, res) => {
   //step 1
   if (!req.body.text) {
@@ -29,61 +29,58 @@ const setGoals = asyncHandler(async (req, res) => {
   res.status(200).json(goal);
 });
 
-//UPDATE GOAL:
+//C.UPDATE GOAL:
 const updateGoals = asyncHandler(async (req, res) => {
-  //step 1 (VALIDATE GOAL)
+  //step 1 (get the goal)
   const goal = await Goal.findById(req.params.id);
-
   if (!goal) {
     res.status(400);
     throw new Error('Goal not found');
   }
 
-  //step 2 (VALIDATE USER )
+  //step 2 (get the user)
   const user = await User.findById(req.user.id);
-
   if (!user) {
     res.status(400);
     throw new Error('User not found');
   }
 
+  //step 3 (validate the user)
   if (goal.user.toString() !== user.id) {
-    //Remember 'goal.user' is coming from the Goal model field.
     res.status(401);
     throw new Error('User not authorized');
   }
 
-  //step 3 (UPDATE)
+  //step 4 (update the goal)
   const updatedGoal = await Goal.findByIdAndUpdate(goal, req.body, {
     new: true,
   });
   res.status(200).json(updatedGoal);
 });
 
-//DELETE GOAL:
+//D.DELETE GOAL:
 const deleteGoals = asyncHandler(async (req, res) => {
-  //step 1 (VALIDATE GOAL)
+  //step 1 (get the goal)
   const goal = await Goal.findById(req.params.id);
-
   if (!goal) {
     res.status(400);
     throw new Error('Goal not found');
   }
 
-  //step 2 (VALIDATE USER )
+  //step 2 (get the user )
   const user = await User.findById(req.user.id);
-
   if (!user) {
     res.status(400);
     throw new Error('User not found');
   }
 
+  //step 3 (validate the user)
   if (goal.user.toString() !== user.id) {
     res.status(401);
     throw new Error('User not authorized');
   }
 
-  ///step 3 (DELETE)
+  ///step 4 (delete the goal)
   const goalDeleted = await Goal.findByIdAndDelete(goal);
   res
     .status(200)

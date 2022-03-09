@@ -16,22 +16,26 @@ function Register() {
   });
   const { name, email, password, password2 } = formData;
 
- //step 3 (REDUX SETUP FOR REGISTER)
+  //step 3.1 (REDUX DEPENDENCIES)
   const navigate = useNavigate(); //redirects
   const dispatch = useDispatch(); //sends the action/payload to the authReducer
-  const { user, isLoading, isError, isSuccess, message } = useSelector( //selects data from the redux store
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    //selects data from the redux store
     (state) => state.auth
   );
-  
+
+  //step 3.2 (USE EFFECT)
   useEffect(() => {
+    //a
     if (isError) {
       toast.error(message);
     }
-
-    if (isSuccess || user) { //if the user was created successfully, redirect.
+    //b
+    if (isSuccess || user) {
+      //if the user was created successfully, redirect.
       navigate('/');
     }
-
+    //c
     dispatch(reset()); //to clear the data after creation of new user.
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
@@ -51,6 +55,7 @@ function Register() {
       toast.error('Passwords do not match');
     } else {
       const userData = {
+        //this data is coming from the form.
         name,
         email,
         password,

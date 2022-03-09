@@ -10,16 +10,17 @@ const protect = asyncHandler(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     try {
-      //get the token from headers:
+      //step 1: get the token from headers:
       token = req.headers.authorization.split(' ')[1];
 
-      //verify token:
+      //step 2: verify token:
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      //get the user from the DB, and assign it to req.user (this will be available on every protected route):
-      req.user = await User.findById(decoded.id).select('-password');
+      //step 3: find the user in DB with id encrypted in the token.
+      //step 4: then save the user as 'req.user', this obj will be available in all protected routes.
+      req.user = await User.findById(decoded.id).select('-password'); //.select() method: will remove specific data.
 
-      //process finished, move on with next...
+      //finished, move on with next...
       next();
     } catch (error) {
       console.log(error);

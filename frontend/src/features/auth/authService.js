@@ -4,9 +4,10 @@ const API_URL = '/api/users/';
 
 // Register user;
 const register = async (userData) => {
-  const response = await axios.post(API_URL, userData);
+  const response = await axios.post(API_URL, userData); //api call
 
   if (response.data) {
+    //axios puts the response in an obj named 'data'.
     localStorage.setItem('user', JSON.stringify(response.data)); //here we set the newly created 'user' to the localStorage.
   }
 

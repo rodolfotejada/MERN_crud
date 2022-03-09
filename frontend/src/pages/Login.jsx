@@ -15,7 +15,7 @@ function Login() {
 
   const { email, password } = formData;
 
-  //REDUX SETUP:
+  //step 3 (REDUX SETUP)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -55,7 +55,7 @@ function Login() {
     dispatch(login(userData));
   };
 
-  //step 3 (SPINNER)
+  //step 4 (SPINNER)
   if (isLoading) {
     return <Spinner />;
   }
